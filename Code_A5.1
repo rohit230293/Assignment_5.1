@@ -1,0 +1,39 @@
+import numpy as np
+import pandas as pd
+import scipy.stats as st
+
+level_of_significance = 0.05
+data = {'Gender'          : ['Male', 'Female'],
+        'High School'     : [60, 40],
+        'Bachelors'     : [54, 44],
+        'Masters'     : [46, 53],
+        'Ph.d.'     : [41, 57],
+        }
+
+df = pd.DataFrame(data)
+df.set_index('Gender' , inplace=True)
+
+#df['Total'] = df[df.columns].sum(axis=1)
+df.loc['sum'] = df.sum()
+
+print(df)
+
+#here we need to apply Chi-Square Test for Independence
+
+#H0: Gender and education level are independent.
+#H1: Gender and education level are not independent.
+
+lst_male = np.asarray(df[:'Male'])[0]
+lst_female = np.asarray(df[:'Female'])[1]
+
+
+men_women = np.array([lst_male,lst_female])
+out = stats.chi2_contingency(men_women)
+
+print("The Chi-Sq value is {:.3f} and the P-Value is {:.3f} for this dataset.".format(out[0], out[1]))
+print("As per the question, level of significance is 5% i.e. {:.3f}.".format(level_of_significance))
+
+if out[1] < level_of_significance :
+    print("Since the P-Value is Less than Level of Significance, we can not aceppet the Null Hypothesis")
+else:
+    print("Since the P-Value is Greater than level of Significance, we can not Reject the Null Hypothesis")
